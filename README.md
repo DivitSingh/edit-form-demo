@@ -1,12 +1,78 @@
-# Getting Started with Create React App
+﻿# `PillList` Edit Entry Type – Implementation Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+The `PillList` is a new edit entry type implemented within a React form component. It enables users to input and manage a dynamic list of short text entries (such as tags or keywords) using a user-friendly, visual "pill" interface.
+
+Each entry is styled as a white rectangle with a thin black border and a small ✕ icon to remove it. Users can add new entries by typing into a text input and pressing `Enter`.
+
+---
+
+## Use Case
+
+The `PillList` input type is useful for scenarios where a user needs to enter multiple values for a single field. Example use cases:
+
+- Tags or keywords
+- Interests or skills
+- Email lists or user handles
+
+---
+
+## How It Works
+
+- The component accepts a list attribute (e.g. `tags`) as part of the `entityObj` state.
+- A temporary state field (`__pillInput`) holds the current input value.
+- On pressing `Enter`, the current input is added to the list if it's not empty or a duplicate.
+- Clicking the ✕ button next to any pill removes that entry from the list.
+- On form submission, the `__pillInput` field is stripped out, and the updated entity is passed to `onSubmitSuccess`.
+
+---
+
+## Integration Details
+
+### 1. EditEntryType Update
+
+```js
+export const EditEntryType = {
+  ...
+  PillList: 'PillList',
+}
+```
+
+### 2. PillList Rendering in `EditForm.jsx`
+
+```jsx
+else if (editEntry.type === EditEntryType.PillList) {
+  // UI rendering for pill entries + input field
+}
+```
+
+### 3. State Management
+
+The pills are rendered using `entity[editEntry.attribute]`. Additions and deletions are handled using `useState` and array manipulation.
+
+---
+
+## Design Choices
+
+- Pills use flexbox for inline layout and spacing.
+- Duplicate entries are ignored.
+- The delete button is designed to be intuitive (✕) and responsive to clicks.
+- The field is self-contained and generic – it works for any attribute provided via `editEntries`.
+
+---
+
+## Testing & Demo Setup
+
+To test the `PillList`, a minimal React setup was used:
+
+- **EditForm.jsx**: contains only the `PillList` logic, stripped of unrelated features and external dependencies.
+- **TestFormPage.jsx**: renders the `EditForm` with one entry using the `PillList` type.
+- **App.js**: renders `TestFormPage` directly.
 
 In the project directory, you can run:
 
-### `npm start`
+`npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -14,57 +80,20 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
+### Example Entry Used
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```js
+{
+  attribute: 'tags',
+  attributeName: 'Tags',
+  type: EditEntryType.PillList,
+  isRequired: false,
+}
+```
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Submission Notes
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- The original `EditForm.jsx` file included many features and external dependencies. For simplicity and clarity, this implementation was isolated into a clean, minimal version to meet the requirements without unrelated compile errors.
+- The current version focuses exclusively on the `PillList` and avoids any dependency on third-party services like Firebase or custom components.
